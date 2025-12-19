@@ -483,11 +483,13 @@ RETURNS TABLE(success BOOLEAN) AS $$
 DECLARE
     deleted_count INTEGER;
 BEGIN
-    -- Удаляем все треки этого исполнителя пользователя (каскадное удаление)
+    -- Удаляем все треки этого исполнителя пользователя
+    -- При этом автоматически удалятся записи из collection_tracks и audit_log из-за каскада
     DELETE FROM tracks
     WHERE tracks.artist_id = p_artist_id AND tracks.user_id = p_user_id;
     
-    -- Удаляем самого исполнителя и сохраняем количество удаленных строк
+    -- Удаляем самого исполнителя
+    -- При этом автоматически удалятся записи из user_favorite_artists из-за каскада
     DELETE FROM artists
     WHERE artists.artist_id = p_artist_id AND artists.user_id = p_user_id;
     
