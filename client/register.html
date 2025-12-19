@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация в музыкальной библиотеке</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .register-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 2rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .register-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .form-group input.error {
+            border-color: #e74c3c;
+        }
+        
+        .form-group input.valid {
+            border-color: #27ae60;
+        }
+        
+        .field-error {
+            color: #e74c3c;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .field-error.show {
+            display: block;
+        }
+        
+        .field-requirement {
+            color: #7f8c8d;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .btn-register {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1.1rem;
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .login-link a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background-color: #fee;
+            border: 1px solid #e74c3c;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .success-message {
+            color: #27ae60;
+            text-align: center;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background-color: #efe;
+            border: 1px solid #27ae60;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="register-container">
+            <div class="register-header">
+                <h2>Регистрация</h2>
+                <p>Музыкальная библиотека</p>
+            </div>
+            
+            <div id="success-message" class="success-message">
+                Регистрация успешна! Теперь вы можете войти в систему.
+            </div>
+            
+            <div id="error-message" class="error-message">
+                Ошибка регистрации. Пожалуйста, проверьте введенные данные.
+            </div>
+            
+            <form id="register-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first-name-reg">Имя:</label>
+                        <input type="text" id="first-name-reg" name="first_name" required 
+                               maxlength="100" autocomplete="given-name">
+                        <div class="field-error" id="first-name-error"></div>
+                        <div class="field-requirement">Требования: максимум 100 символов</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="last-name-reg">Фамилия:</label>
+                        <input type="text" id="last-name-reg" name="last_name" required 
+                               maxlength="100" autocomplete="family-name">
+                        <div class="field-error" id="last-name-error"></div>
+                        <div class="field-requirement">Требования: максимум 100 символов</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email-reg">Email:</label>
+                    <input type="email" id="email-reg" name="email" required 
+                           maxlength="100" autocomplete="email">
+                    <div class="field-error" id="email-error"></div>
+                    <div class="field-requirement">Требования: валидный email адрес, максимум 100 символов</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-reg">Логин:</label>
+                    <input type="text" id="login-reg" name="login" required 
+                           minlength="3" maxlength="50"
+                           pattern="[a-zA-Z0-9_]+"
+                           autocomplete="username">
+                    <div class="field-error" id="login-error"></div>
+                    <div class="field-requirement">Требования: от 3 до 50 символов, только буквы, цифры и подчеркивание</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password-reg">Пароль:</label>
+                    <input type="password" id="password-reg" name="password" required 
+                           minlength="6" maxlength="255"
+                           autocomplete="new-password">
+                    <div class="field-error" id="password-error"></div>
+                    <div class="field-requirement">Требования: минимум 6 символов, максимум 255 символов</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password-confirm">Подтверждение пароля:</label>
+                    <input type="password" id="password-confirm" name="password_confirm" required 
+                           minlength="6" maxlength="255"
+                           autocomplete="new-password">
+                    <div class="field-error" id="password-confirm-error"></div>
+                    <div class="field-requirement">Требования: должен совпадать с паролем</div>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-register">Зарегистрироваться</button>
+                </div>
+            </form>
+            
+            <div class="login-link">
+                <p>Уже есть аккаунт? <a href="login.html">Войти</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const registerForm = document.getElementById('register-form');
+        const firstNameInput = document.getElementById('first-name-reg');
+        const lastNameInput = document.getElementById('last-name-reg');
+        const emailInput = document.getElementById('email-reg');
+        const loginInput = document.getElementById('login-reg');
+        const passwordInput = document.getElementById('password-reg');
+        const passwordConfirmInput = document.getElementById('password-confirm');
+        
+        const firstNameError = document.getElementById('first-name-error');
+        const lastNameError = document.getElementById('last-name-error');
+        const emailError = document.getElementById('email-error');
+        const loginError = document.getElementById('login-error');
+        const passwordError = document.getElementById('password-error');
+        const passwordConfirmError = document.getElementById('password-confirm-error');
+        
+        const errorMessage = document.getElementById('error-message');
+        const successMessage = document.getElementById('success-message');
+
+        // Validation functions
+        function validateFirstName(firstName) {
+            firstName = firstName.trim();
+            if (!firstName) {
+                return 'Имя обязательно для заполнения';
+            }
+            if (firstName.length > 100) {
+                return 'Имя не должно превышать 100 символов';
+            }
+            return null;
+        }
+
+        function validateLastName(lastName) {
+            lastName = lastName.trim();
+            if (!lastName) {
+                return 'Фамилия обязательна для заполнения';
+            }
+            if (lastName.length > 100) {
+                return 'Фамилия не должна превышать 100 символов';
+            }
+            return null;
+        }
+
+        function validateEmail(email) {
+            email = email.trim();
+            if (!email) {
+                return 'Email обязателен для заполнения';
+            }
+            if (email.length > 100) {
+                return 'Email не должен превышать 100 символов';
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return 'Введите корректный email адрес';
+            }
+            return null;
+        }
+
+        function validateLogin(login) {
+            login = login.trim();
+            if (!login) {
+                return 'Логин обязателен для заполнения';
+            }
+            if (login.length < 3) {
+                return 'Логин должен содержать минимум 3 символа';
+            }
+            if (login.length > 50) {
+                return 'Логин не должен превышать 50 символов';
+            }
+            if (!/^[a-zA-Z0-9_]+$/.test(login)) {
+                return 'Логин может содержать только буквы, цифры и подчеркивание';
+            }
+            return null;
+        }
+
+        function validatePassword(password) {
+            if (!password) {
+                return 'Пароль обязателен для заполнения';
+            }
+            if (password.length < 6) {
+                return 'Пароль должен содержать минимум 6 символов';
+            }
+            if (password.length > 255) {
+                return 'Пароль не должен превышать 255 символов';
+            }
+            return null;
+        }
+
+        function validatePasswordConfirm(password, passwordConfirm) {
+            if (!passwordConfirm) {
+                return 'Подтверждение пароля обязательно';
+            }
+            if (password !== passwordConfirm) {
+                return 'Пароли не совпадают';
+            }
+            return null;
+        }
+
+        function showFieldError(input, errorElement, message) {
+            input.classList.add('error');
+            input.classList.remove('valid');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        }
+
+        function clearFieldError(input, errorElement) {
+            input.classList.remove('error');
+            input.classList.add('valid');
+            errorElement.textContent = '';
+            errorElement.classList.remove('show');
+        }
+
+        function clearAllErrors() {
+            clearFieldError(firstNameInput, firstNameError);
+            clearFieldError(lastNameInput, lastNameError);
+            clearFieldError(emailInput, emailError);
+            clearFieldError(loginInput, loginError);
+            clearFieldError(passwordInput, passwordError);
+            clearFieldError(passwordConfirmInput, passwordConfirmError);
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+        }
+
+        // Real-time validation
+        firstNameInput.addEventListener('blur', function() {
+            const error = validateFirstName(this.value);
+            if (error) {
+                showFieldError(this, firstNameError, error);
+            } else {
+                clearFieldError(this, firstNameError);
+            }
+        });
+
+        lastNameInput.addEventListener('blur', function() {
+            const error = validateLastName(this.value);
+            if (error) {
+                showFieldError(this, lastNameError, error);
+            } else {
+                clearFieldError(this, lastNameError);
+            }
+        });
+
+        emailInput.addEventListener('blur', function() {
+            const error = validateEmail(this.value);
+            if (error) {
+                showFieldError(this, emailError, error);
+            } else {
+                clearFieldError(this, emailError);
+            }
+        });
+
+        loginInput.addEventListener('blur', function() {
+            const error = validateLogin(this.value);
+            if (error) {
+                showFieldError(this, loginError, error);
+            } else {
+                clearFieldError(this, loginError);
+            }
+        });
+
+        passwordInput.addEventListener('blur', function() {
+            const error = validatePassword(this.value);
+            if (error) {
+                showFieldError(this, passwordError, error);
+            } else {
+                clearFieldError(this, passwordError);
+            }
+            // Also validate password confirm if it has a value
+            if (passwordConfirmInput.value) {
+                const confirmError = validatePasswordConfirm(this.value, passwordConfirmInput.value);
+                if (confirmError) {
+                    showFieldError(passwordConfirmInput, passwordConfirmError, confirmError);
+                } else {
+                    clearFieldError(passwordConfirmInput, passwordConfirmError);
+                }
+            }
+        });
+
+        passwordConfirmInput.addEventListener('blur', function() {
+            const error = validatePasswordConfirm(passwordInput.value, this.value);
+            if (error) {
+                showFieldError(this, passwordConfirmError, error);
+            } else {
+                clearFieldError(this, passwordConfirmError);
+            }
+        });
+
+        // Form submission
+        registerForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearAllErrors();
+            
+            const firstName = firstNameInput.value.trim();
+            const lastName = lastNameInput.value.trim();
+            const email = emailInput.value.trim();
+            const login = loginInput.value.trim();
+            const password = passwordInput.value;
+            const passwordConfirm = passwordConfirmInput.value;
+            
+            // Validate all fields
+            let hasErrors = false;
+            
+            const firstNameErr = validateFirstName(firstName);
+            if (firstNameErr) {
+                showFieldError(firstNameInput, firstNameError, firstNameErr);
+                hasErrors = true;
+            }
+            
+            const lastNameErr = validateLastName(lastName);
+            if (lastNameErr) {
+                showFieldError(lastNameInput, lastNameError, lastNameErr);
+                hasErrors = true;
+            }
+            
+            const emailErr = validateEmail(email);
+            if (emailErr) {
+                showFieldError(emailInput, emailError, emailErr);
+                hasErrors = true;
+            }
+            
+            const loginErr = validateLogin(login);
+            if (loginErr) {
+                showFieldError(loginInput, loginError, loginErr);
+                hasErrors = true;
+            }
+            
+            const passwordErr = validatePassword(password);
+            if (passwordErr) {
+                showFieldError(passwordInput, passwordError, passwordErr);
+                hasErrors = true;
+            }
+            
+            const passwordConfirmErr = validatePasswordConfirm(password, passwordConfirm);
+            if (passwordConfirmErr) {
+                showFieldError(passwordConfirmInput, passwordConfirmError, passwordConfirmErr);
+                hasErrors = true;
+            }
+            
+            if (hasErrors) {
+                return;
+            }
+            
+            // Disable submit button
+            const submitBtn = registerForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Регистрация...';
+            
+            try {
+            const response = await fetch("http://localhost:5000/api/auth/register", { 
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                    body: JSON.stringify({ 
+                        first_name: firstName, 
+                        last_name: lastName, 
+                        email, 
+                        login, 
+                        password 
+                    })
+            });
+                
+            const json = await response.json();
+                
+            if (!response.ok) {
+                    // Show error message
+                    errorMessage.textContent = json.message || 'Ошибка регистрации. Пожалуйста, проверьте введенные данные.';
+                    errorMessage.classList.add('show');
+                    
+                    // If it's a login conflict, highlight login field
+                    if (json.message && json.message.toLowerCase().includes('login')) {
+                        loginInput.classList.add('error');
+                        showFieldError(loginInput, loginError, 'Этот логин уже занят');
+                    }
+                    
+                    // If it's an email conflict, highlight email field
+                    if (json.message && json.message.toLowerCase().includes('email')) {
+                        emailInput.classList.add('error');
+                        showFieldError(emailInput, emailError, 'Этот email уже используется');
+                    }
+                } else {
+                    // Success
+                    successMessage.classList.add('show');
+                    errorMessage.classList.remove('show');
+                    
+                    // Clear form
+                    registerForm.reset();
+                    clearAllErrors();
+                    
+                    // Redirect to login after 2 seconds
+                    setTimeout(function() {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                }
+            } catch (error) {
+                errorMessage.textContent = 'Ошибка подключения к серверу. Попробуйте позже.';
+                errorMessage.classList.add('show');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Зарегистрироваться';
+            }
+        });
+    </script>
+</body>
+</html>

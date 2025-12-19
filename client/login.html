@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в музыкальную библиотеку</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 2rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .form-group input.error {
+            border-color: #e74c3c;
+        }
+        
+        .form-group input.valid {
+            border-color: #27ae60;
+        }
+        
+        .field-error {
+            color: #e74c3c;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .field-error.show {
+            display: block;
+        }
+        
+        .field-requirement {
+            color: #7f8c8d;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1.1rem;
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .register-link a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background-color: #fee;
+            border: 1px solid #e74c3c;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <div class="login-header">
+                <h2>Вход в систему</h2>
+                <p>Музыкальная библиотека</p>
+            </div>
+            
+            <div id="error-message" class="error-message">
+                Неверный логин или пароль
+            </div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login">Логин:</label>
+                    <input type="text" id="login" name="login" required 
+                           minlength="3" maxlength="50"
+                           pattern="[a-zA-Z0-9_]+"
+                           autocomplete="username">
+                    <div class="field-error" id="login-error"></div>
+                    <div class="field-requirement">Требования: от 3 до 50 символов, только буквы, цифры и подчеркивание</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Пароль:</label>
+                    <input type="password" id="password" name="password" required 
+                           minlength="6" maxlength="255"
+                           autocomplete="current-password">
+                    <div class="field-error" id="password-error"></div>
+                    <div class="field-requirement">Требования: минимум 6 символов</div>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-login">Войти</button>
+                </div>
+            </form>
+            
+            <div class="register-link">
+                <p>Нет аккаунта? <a href="register.html">Зарегистрироваться</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const loginInput = document.getElementById('login');
+        const passwordInput = document.getElementById('password');
+        const loginError = document.getElementById('login-error');
+        const passwordError = document.getElementById('password-error');
+        const errorMessage = document.getElementById('error-message');
+
+        // Validation functions
+        function validateLogin(login) {
+            login = login.trim();
+            if (!login) {
+                return 'Логин обязателен для заполнения';
+            }
+            if (login.length < 3) {
+                return 'Логин должен содержать минимум 3 символа';
+            }
+            if (login.length > 50) {
+                return 'Логин не должен превышать 50 символов';
+            }
+            if (!/^[a-zA-Z0-9_]+$/.test(login)) {
+                return 'Логин может содержать только буквы, цифры и подчеркивание';
+            }
+            return null;
+        }
+
+        function validatePassword(password) {
+            if (!password) {
+                return 'Пароль обязателен для заполнения';
+            }
+            if (password.length < 6) {
+                return 'Пароль должен содержать минимум 6 символов';
+            }
+            if (password.length > 255) {
+                return 'Пароль не должен превышать 255 символов';
+            }
+            return null;
+        }
+
+        function showFieldError(input, errorElement, message) {
+            input.classList.add('error');
+            input.classList.remove('valid');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        }
+
+        function clearFieldError(input, errorElement) {
+            input.classList.remove('error');
+            input.classList.add('valid');
+            errorElement.textContent = '';
+            errorElement.classList.remove('show');
+        }
+
+        function clearAllErrors() {
+            clearFieldError(loginInput, loginError);
+            clearFieldError(passwordInput, passwordError);
+            errorMessage.classList.remove('show');
+        }
+
+        // Real-time validation
+        loginInput.addEventListener('blur', function() {
+            const error = validateLogin(this.value);
+            if (error) {
+                showFieldError(this, loginError, error);
+            } else {
+                clearFieldError(this, loginError);
+            }
+        });
+
+        passwordInput.addEventListener('blur', function() {
+            const error = validatePassword(this.value);
+            if (error) {
+                showFieldError(this, passwordError, error);
+            } else {
+                clearFieldError(this, passwordError);
+            }
+        });
+
+        // Form submission
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearAllErrors();
+            
+            const login = loginInput.value.trim();
+            const password = passwordInput.value;
+            
+            // Validate all fields
+            let hasErrors = false;
+            
+            const loginErr = validateLogin(login);
+            if (loginErr) {
+                showFieldError(loginInput, loginError, loginErr);
+                hasErrors = true;
+            }
+            
+            const passwordErr = validatePassword(password);
+            if (passwordErr) {
+                showFieldError(passwordInput, passwordError, passwordErr);
+                hasErrors = true;
+            }
+            
+            if (hasErrors) {
+                return;
+            }
+            
+            // Disable submit button
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Вход...';
+            
+            try {
+            const response = await fetch("http://localhost:5000/api/auth/login", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ login, password })
+            });
+                
+            const json = await response.json();
+                
+            if (!response.ok) {
+                    // Show error message
+                    errorMessage.textContent = json.message || 'Неверный логин или пароль';
+                    errorMessage.classList.add('show');
+                    
+                    // Mark fields as error
+                    loginInput.classList.add('error');
+                    passwordInput.classList.add('error');
+                } else {
+                    // Success - save to localStorage
+            localStorage.setItem("token", json.token);
+            localStorage.setItem("user_id", json.user.user_id);
+            localStorage.setItem("login", json.user.login);
+            localStorage.setItem("first_name", json.user.first_name);
+            localStorage.setItem("last_name", json.user.last_name);
+            localStorage.setItem("email", json.user.email);
+            localStorage.setItem("avatar_url", json.user.avatar_url);
+            localStorage.setItem("is_admin", json.user.is_admin);
+                    
+                    // Redirect to main page
+                window.location.href = 'index.html';
+                }
+            } catch (error) {
+                errorMessage.textContent = 'Ошибка подключения к серверу. Попробуйте позже.';
+                errorMessage.classList.add('show');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Войти';
+            }
+        });
+    </script>
+</body>
+</html>
